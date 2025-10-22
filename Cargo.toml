@@ -2,6 +2,14 @@
 name = "parfait-gfa"
 version = "0.1.0"
 edition = "2024"
+authors = ["0w0x <173839519+0w0x@users.noreply.github.com>"]
+description = "gfa v1/v2 parser and validator"
+readme = "README.md"
+license = "MIT"
+license-file = "LICENSE"
+repository = "https://github.com/0w0x/parfait-gfa"
+keywords = ["gfa", "parser", "bioinformatics"]
+categories = ["science::bioinformatics", "parser-implementations"]
 
 [dependencies]
 clap = { version = "4.5.41", features = ["derive"] }
