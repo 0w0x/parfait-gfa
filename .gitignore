@@ -1,0 +1,6 @@
+/target
+.DS_Store
+test/data
+dross
+.vscode
+file_with_ab_tags.gfa

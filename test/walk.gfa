@@ -1,0 +1,19 @@
+H	VN:Z:1.0
+S	s1	AAAAA	pl:Z:236,163,209,172
+S	s2	TTT	pl:Z:185,154,161,133
+S	s3	AAAA	pl:Z:130,129,103,117
+S	s4	GGGGG	pl:Z:85,93,60,82
+S	s5	TTTC	pl:Z:160,102,149,76
+S	s6	CCCC	pl:Z:126,59,98,67
+S	s7	AAATT	pl:Z:225,199,241,224
+L	s1	+	s2	+	0M
+L	s2	+	s3	+	0M
+L	s3	+	s4	+	0M
+L	s2	+	s5	+	0M
+L	s5	+	s6	+	0M
+L	s6	+	s4	+	2M
+L	s1	+	s7	+	0M
+L	s7	+	s6	+	0M
+J	s7	+	s1	+	212
+W	walk1	1	w1#chr1	0	0	>s1>s2>s5>s6>s4
+W	walk2	1	w2#chr1	0	0	>s1>s7>s6>s4
