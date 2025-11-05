@@ -13,7 +13,7 @@ use crate::line::utils::parse_directed_reference;
 use crate::optional_field::OptionalFieldValue;
 use crate::optional_field::TagMap;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Gap {
     pub line_no: usize,
     pub raw: String,

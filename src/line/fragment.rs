@@ -12,7 +12,7 @@ use crate::line::utils::DirectedReference;
 use crate::line::utils::deduce_alignment;
 use crate::line::utils::parse_directed_reference;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Fragment {
     pub line_no: usize,
     pub raw: String,

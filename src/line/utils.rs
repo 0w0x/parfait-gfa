@@ -1,9 +1,10 @@
 use crate::{
     errors::{ParseMessage, ParseMessageCode},
-    line::segment::Segment, optional_field::TagMap,
+    line::segment::Segment,
+    optional_field::TagMap,
 };
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct IntervalPosition {
     pub position: i32,
     pub is_last: bool, // true if the position ends with a '$'
@@ -19,7 +20,7 @@ impl std::fmt::Display for IntervalPosition {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct DirectedReference {
     pub reference: String,
     pub direction: bool, // true for +, false for -
@@ -35,7 +36,7 @@ impl std::fmt::Display for DirectedReference {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Interval {
     pub begin: IntervalPosition,
     pub end: IntervalPosition,
@@ -160,7 +161,12 @@ pub fn parse_interval(
     Ok(interval)
 }
 
-fn check_interval(n: usize, errors: &mut Vec<ParseMessage>, interval: &Interval, segment: &Segment) {
+fn check_interval(
+    n: usize,
+    errors: &mut Vec<ParseMessage>,
+    interval: &Interval,
+    segment: &Segment,
+) {
     let name = segment.name.clone();
     let length = segment.get_length();
 
@@ -237,7 +243,7 @@ fn check_interval(n: usize, errors: &mut Vec<ParseMessage>, interval: &Interval,
 pub fn parse_position(
     n: usize,
     errors: &mut Vec<ParseMessage>,
-    position: &str
+    position: &str,
 ) -> Result<IntervalPosition, ()> {
     // A valid position is a signed integer that can optionally end with a "$" character
     if position.is_empty() {
@@ -263,7 +269,7 @@ pub fn parse_position(
             position.to_owned(),
         ));
     })?;
-    
+
     Ok(IntervalPosition {
         position: pos,
         is_last: has_postfix,
@@ -313,11 +319,7 @@ pub fn is_valid_cigar(cigar: &str) -> bool {
 
 // TODO: profile these inlines
 #[inline]
-pub fn build_gfa_line(
-    record_type: char,
-    columns: &[&str],
-    tags: &TagMap,
-) -> String {
+pub fn build_gfa_line(record_type: char, columns: &[&str], tags: &TagMap) -> String {
     let mut line = String::new();
     line.push(record_type);
     for col in columns {

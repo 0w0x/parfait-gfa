@@ -251,7 +251,7 @@ fn check_optional_field_tag_context(
     }
 }
 
-fn parse_optional_field_value(
+pub fn parse_optional_field_value(
     line: usize,
     ftype: FieldType,
     value: &str,

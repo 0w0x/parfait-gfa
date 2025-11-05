@@ -7,7 +7,7 @@ pub mod link;
 pub mod path;
 pub mod record;
 pub mod segment;
-mod utils;
+pub mod utils;
 pub mod walk;
 pub mod edge;
 pub mod gap;
