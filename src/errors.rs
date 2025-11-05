@@ -195,7 +195,7 @@ impl ParseMessage {
     // - raw is unused
     // - line number doesn't bubble up
 
-    fn get_message(&self) -> (ParseMessageSeverity, String) {
+    pub fn get_message(&self) -> (ParseMessageSeverity, String) {
         match self.code {
             ParseMessageCode::InvalidLine => (
                 ParseMessageSeverity::Error,

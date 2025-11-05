@@ -1,6 +1,6 @@
 [package]
 name = "parfait-gfa"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 authors = ["0w0x <173839519+0w0x@users.noreply.github.com>"]
 description = "gfa v1/v2 parser and validator"
