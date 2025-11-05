@@ -64,14 +64,18 @@ jobs:
         id: publish
         run: |
           set -euo pipefail
-          if cargo publish --locked; then
+          set +e
+          OUTPUT=$(cargo publish --locked 2>&1)
+          STATUS=$?
+          set -e
+          echo "$OUTPUT"
+          if [ $STATUS -eq 0 ]; then
+            echo "published!"
             echo "published=true" >> "$GITHUB_OUTPUT"
+          elif echo "$OUTPUT" | grep -q "already uploaded"; then
+            echo "version already on crates.io"
+            echo "published=false" >> "$GITHUB_OUTPUT"
           else
-            if grep -q "is already uploaded" <<<"$(cargo publish 2>&1 || true)"; then
-              echo "Version already on crates.io; treating as success."
-              echo "published=false" >> "$GITHUB_OUTPUT"
-            else
-              echo "Publish failed for another reason."
-              exit 1
-            fi
+            echo "publish failed"
+            exit $STATUS
           fi
