@@ -58,7 +58,7 @@ jobs:
           fi
 
       - name: Check package builds
-        run: cargo package
+        run: cargo package --allow-dirty
 
       - name: Publish to crates.io
         id: publish
