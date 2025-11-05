@@ -1,0 +1,77 @@
+name: Publish crate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+
+jobs:
+  publish:
+    name: Tag & publish to crates.io
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Derive crate name & version from Cargo.toml
+        id: meta
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import os, sys
+          import tomllib  # Python 3.11+
+          with open('Cargo.toml','rb') as f:
+              data = tomllib.load(f)
+          pkg = data.get('package')
+          if not pkg:
+              sys.exit("No [package] section found.")
+          print(f"crate_name={pkg['name']}")
+          print(f"crate_version={pkg['version']}")
+          PY
+      - name: Show metadata
+        run: |
+          echo "crate: ${{ steps.meta.outputs.crate_name }}"
+          echo "version: ${{ steps.meta.outputs.crate_version }}"
+
+      - name: Create tag
+        run: |
+          set -euo pipefail
+          TAG="v${{ steps.meta.outputs.crate_version }}"
+          git fetch --tags --force
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists. Skipping tag creation."
+          else
+            git config user.name "${GITHUB_ACTOR}"
+            git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+            git tag -a "$TAG" -m "Release $TAG"
+            git push origin "$TAG"
+          fi
+
+      - name: Check package builds
+        run: cargo package
+
+      - name: Publish to crates.io
+        id: publish
+        run: |
+          set -euo pipefail
+          if cargo publish; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          else
+            if grep -q "is already uploaded" <<<"$(cargo publish 2>&1 || true)"; then
+              echo "Version already on crates.io; treating as success."
+              echo "published=false" >> "$GITHUB_OUTPUT"
+            else
+              echo "Publish failed for another reason."
+              exit 1
+            fi
+          fi
