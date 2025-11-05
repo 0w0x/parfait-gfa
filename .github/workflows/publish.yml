@@ -64,7 +64,7 @@ jobs:
         id: publish
         run: |
           set -euo pipefail
-          if cargo publish; then
+          if cargo publish --locked; then
             echo "published=true" >> "$GITHUB_OUTPUT"
           else
             if grep -q "is already uploaded" <<<"$(cargo publish 2>&1 || true)"; then
