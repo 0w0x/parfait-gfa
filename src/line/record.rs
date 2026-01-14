@@ -69,7 +69,17 @@ impl GfaRecord {
             Some("G") => crate::line::gap::REQ_COLUMNS_GAP,
             Some("O") => crate::line::ordered::REQ_COLUMNS_ORDERED,
             Some("U") => crate::line::unordered::REQ_COLUMNS_UNORDERED,
-            _ => panic!("unreachable")
+            _ => {
+                // this should be unreachable but just in case
+                return (
+                    None,
+                    vec![ParseMessage::new(
+                        n,
+                        ParseMessageCode::InvalidLine,
+                        raw.to_owned(),
+                    )],
+                );
+            }
         };
 
         // check if there are enough columns

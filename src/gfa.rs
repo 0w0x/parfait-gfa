@@ -122,6 +122,7 @@ impl GfaParser {
                 }
 
                 let tag = line.as_bytes()[0];
+                
                 match pass {
                     0 if tag != b'H' => continue,
                     1 if tag != b'S' => continue,
@@ -138,6 +139,17 @@ impl GfaParser {
                         continue;
                     }
                     _ => {}
+                }
+
+                // ensure second byte is actually a tab
+                if line.len() < 2 || line.as_bytes()[1] != b'\t' {
+                    self.messages.push(ParseMessage::new(
+                        idx,
+                        ParseMessageCode::InvalidLine,
+                        line.clone(),
+                    ));
+                    
+                    continue;
                 }
 
                 // TODO: add current_line_no to GfaParser state so that we don't have to pass it around
